@@ -101,10 +101,34 @@ const ThreatGuardAPI = {
       timestamp: new Date().toISOString(),
       file_contents: fileContents,
       detection_level: 'enhanced',
-      include_threat_intelligence: true
+      include_threat_intelligence: true,
+      ait_tag: scanOptions.aitTag || 'AIT',
+      spk_tag: scanOptions.spkTag || 'SPK-SECURITY',
+      repo_name: scanOptions.repoName || 'threatguard-repo'
     };
     
     return api.post('/api/scan/files', scanPayload);
+  },
+  
+  /**
+   * Scan GitHub repository for logic bombs and security threats
+   */
+  scanGithubRepository: (githubUrl, scanOptions = {}) => {
+    const scanPayload = {
+      scan_id: `github_scan_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      scan_type: scanOptions.scanType || 'github',
+      project_id: scanOptions.projectId || `github-scan-${Date.now()}`,
+      project_name: scanOptions.projectName || 'GitHub Repository Scan',
+      timestamp: new Date().toISOString(),
+      github_url: githubUrl,
+      detection_level: 'enhanced',
+      include_threat_intelligence: true,
+      ait_tag: scanOptions.aitTag || 'AIT',
+      spk_tag: scanOptions.spkTag || 'SPK-SECURITY',
+      repo_name: scanOptions.repoName || 'github-repo'
+    };
+    
+    return api.post('/api/scan/github', scanPayload);
   },
   
   // ===== THREAT MANAGEMENT =====

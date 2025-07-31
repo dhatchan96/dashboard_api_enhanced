@@ -1,0 +1,205 @@
+[
+  {
+    "id": "logic-bomb-time-trigger",
+    "name": "Time-Based Logic Bomb",
+    "description": "Detects suspicious time-based conditional execution that may trigger malicious actions on specific dates",
+    "severity": "CRITICAL_BOMB",
+    "type": "SCHEDULED_THREAT",
+    "language": "*",
+    "pattern": "if.*(?:date|datetime|time).*[><=].*\\d{4}.*:.*(?:delete|remove|destroy|format|kill|rmdir|unlink)",
+    "remediation_effort": 90,
+    "tags": [
+      "logic-bomb",
+      "time-trigger",
+      "malicious-code",
+      "date-based"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SCHEDULED_THREAT"
+  },
+  {
+    "id": "logic-bomb-user-targeted",
+    "name": "User-Targeted Logic Bomb",
+    "description": "Detects malicious code that targets specific users for harmful actions",
+    "severity": "CRITICAL_BOMB",
+    "type": "TARGETED_ATTACK",
+    "language": "*",
+    "pattern": "if.*(?:user|username|getuser|USER).*==.*[\"\\'][^\"\\']*[\"\\'].*:.*(?:delete|remove|destroy|corrupt|kill)",
+    "remediation_effort": 75,
+    "tags": [
+      "logic-bomb",
+      "user-targeted",
+      "malicious-code",
+      "personalized-attack"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "TARGETED_ATTACK"
+  },
+  {
+    "id": "logic-bomb-execution-counter",
+    "name": "Counter-Based Logic Bomb",
+    "description": "Detects execution count-based triggers that activate malicious behavior after N executions",
+    "severity": "HIGH_RISK",
+    "type": "EXECUTION_TRIGGER",
+    "language": "*",
+    "pattern": "(?:count|counter|iteration|exec_count).*[><=].*\\d+.*:.*(?:delete|remove|destroy|corrupt|format)",
+    "remediation_effort": 60,
+    "tags": [
+      "logic-bomb",
+      "counter-based",
+      "trigger-condition",
+      "execution-based"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "EXECUTION_TRIGGER"
+  },
+  {
+    "id": "logic-bomb-environment-condition",
+    "name": "Environment-Based Logic Bomb",
+    "description": "Detects environment-specific triggers that activate malicious behavior on target systems",
+    "severity": "HIGH_RISK",
+    "type": "SYSTEM_SPECIFIC_THREAT",
+    "language": "*",
+    "pattern": "if.*(?:env|environment|hostname|platform|gethostname).*==.*[\"\\'][^\"\\']*[\"\\'].*:.*(?:sys\\.|os\\.|subprocess|system)",
+    "remediation_effort": 50,
+    "tags": [
+      "logic-bomb",
+      "environment-trigger",
+      "system-specific",
+      "conditional-attack"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SYSTEM_SPECIFIC_THREAT"
+  },
+  {
+    "id": "destructive-payload-detector",
+    "name": "Destructive Payload Detection",
+    "description": "Detects potentially destructive operations that could be payloads of logic bombs",
+    "severity": "CRITICAL_BOMB",
+    "type": "DESTRUCTIVE_PAYLOAD",
+    "language": "*",
+    "pattern": "(?:shutil\\.rmtree|os\\.remove|subprocess\\.call.*rm|system.*(?:del|rm)|format.*c:|rmdir.*\\/s)",
+    "remediation_effort": 120,
+    "tags": [
+      "destructive-payload",
+      "system-damage",
+      "malicious-code",
+      "data-destruction"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "DESTRUCTIVE_PAYLOAD"
+  },
+  {
+    "id": "logic-bomb-network-trigger",
+    "name": "Network-Based Logic Bomb",
+    "description": "Detects network condition-based triggers for malicious activation",
+    "severity": "MEDIUM_RISK",
+    "type": "CONNECTION_BASED_THREAT",
+    "language": "*",
+    "pattern": "if.*(?:ping|connect|socket|urllib).*(?:fail|error|timeout).*:.*(?:delete|remove|destroy)",
+    "remediation_effort": 45,
+    "tags": [
+      "logic-bomb",
+      "network-trigger",
+      "connectivity-based"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "CONNECTION_BASED_THREAT"
+  },
+  {
+    "id": "financial-fraud-detector",
+    "name": "Financial Fraud Pattern",
+    "description": "Detects potential financial fraud and unauthorized money redirection",
+    "severity": "CRITICAL_BOMB",
+    "type": "FINANCIAL_FRAUD",
+    "language": "*",
+    "pattern": "(?:bitcoin.*address|crypto.*wallet|paypal\\.me|transfer.*money|redirect.*payment)",
+    "remediation_effort": 90,
+    "tags": [
+      "financial-fraud",
+      "money-redirection",
+      "cryptocurrency"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "FINANCIAL_FRAUD"
+  },
+  {
+    "id": "hardcoded-secrets-detector",
+    "name": "Hardcoded Secrets",
+    "description": "Detects hardcoded passwords, API keys, and secrets",
+    "severity": "CRITICAL",
+    "type": "VULNERABILITY",
+    "language": "*",
+    "pattern": "(password|secret|key|token)\\s*[=:]\\s*[\"\\'][^\"\\']{8,}[\"\\']",
+    "remediation_effort": 30,
+    "tags": [
+      "security",
+      "secrets",
+      "hardcoded"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_VULNERABILITY"
+  },
+  {
+    "id": "sql-injection-detector",
+    "name": "SQL Injection Risk",
+    "description": "Detects potential SQL injection vulnerabilities",
+    "severity": "CRITICAL",
+    "type": "VULNERABILITY",
+    "language": "*",
+    "pattern": "execute\\s*\\(\\s*[\"\\'].*%.*[\"\\']",
+    "remediation_effort": 60,
+    "tags": [
+      "security",
+      "injection",
+      "sql"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_VULNERABILITY"
+  },
+  {
+    "id": "eval-usage-detector",
+    "name": "Dangerous eval() Usage",
+    "description": "Usage of eval() function poses security risks",
+    "severity": "MAJOR",
+    "type": "VULNERABILITY",
+    "language": "javascript",
+    "pattern": "eval\\s*\\(",
+    "remediation_effort": 15,
+    "tags": [
+      "security",
+      "injection",
+      "eval"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_VULNERABILITY"
+  },
+  {
+    "id": "logic-bomb-1753641918159",
+    "name": "Logic Bomb Detection",
+    "description": "Detects time-based logic bombs and conditional triggers",
+    "severity": "CRITICAL_BOMB",
+    "type": "SCHEDULED_THREAT",
+    "language": "*",
+    "pattern": "if.*(?:date|datetime|time).*[><=].*\\d{4}.*:.*(?:delete|remove|destroy)",
+    "remediation_effort": 90,
+    "tags": [
+      "logic-bomb",
+      "time-trigger",
+      "malicious-code"
+    ],
+    "enabled": true,
+    "custom": true,
+    "threat_category": "UNKNOWN"
+  }
+]

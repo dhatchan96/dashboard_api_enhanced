@@ -183,5 +183,234 @@
     "enabled": true,
     "custom": false,
     "threat_category": "SECURITY_VULNERABILITY"
+  },
+  {
+    "id": "logic-bomb-1753641918159",
+    "name": "Logic Bomb Detection",
+    "description": "Detects time-based logic bombs and conditional triggers",
+    "severity": "CRITICAL_BOMB",
+    "type": "SCHEDULED_THREAT",
+    "language": "*",
+    "pattern": "if.*(?:date|datetime|time).*[><=].*\\d{4}.*:.*(?:delete|remove|destroy)",
+    "remediation_effort": 90,
+    "tags": [
+      "logic-bomb",
+      "time-trigger",
+      "malicious-code"
+    ],
+    "enabled": true,
+    "custom": true,
+    "threat_category": "UNKNOWN"
+  },
+  {
+    "id": "hardcoded-credentials",
+    "name": "Hardcoded Credentials",
+    "description": "Detects hardcoded passwords, API keys, and secrets in code",
+    "severity": "CRITICAL",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "(?:password|secret|key|token|credential).*\\s*=\\s*[\"'][^\"']*[\"']",
+    "remediation_effort": 45,
+    "tags": [
+      "security-debt",
+      "credentials",
+      "secrets",
+      "hardcoded"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "HARDCODED_CREDENTIALS",
+    "business_impact": "High"
+  },
+  {
+    "id": "hardcoded-urls",
+    "name": "Hardcoded URLs",
+    "description": "Detects hardcoded URLs and connection strings",
+    "severity": "MAJOR",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "(?:url|endpoint|connection|host).*\\s*=\\s*[\"'][^\"']*[\"']",
+    "remediation_effort": 30,
+    "tags": [
+      "security-debt",
+      "urls",
+      "endpoints",
+      "hardcoded"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "HARDCODED_URLS",
+    "business_impact": "Medium"
+  },
+  {
+    "id": "input-validation",
+    "name": "Missing Input Validation",
+    "description": "Detects code without proper input validation",
+    "severity": "CRITICAL",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "f[\"'][^\"']*\\{[^}]*\\}[^\"']*[\"']",
+    "remediation_effort": 60,
+    "tags": [
+      "security-debt",
+      "validation",
+      "injection",
+      "security"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "INPUT_VALIDATION",
+    "business_impact": "Critical"
+  },
+  {
+    "id": "vulnerable-libraries",
+    "name": "Vulnerable Libraries",
+    "description": "Detects outdated or vulnerable library versions",
+    "severity": "MAJOR",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "(?:requests|django|flask|cryptography|urllib3).*==.*[\\d\\.]+",
+    "remediation_effort": 40,
+    "tags": [
+      "security-debt",
+      "libraries",
+      "dependencies",
+      "vulnerabilities"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "VULNERABLE_LIBRARIES",
+    "business_impact": "High"
+  },
+  {
+    "id": "plain-text-storage",
+    "name": "Plain Text Storage",
+    "description": "Detects sensitive data stored in plain text",
+    "severity": "CRITICAL",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "(?:password|ssn|credit_card|secret).*\\.write|\\.save|\\.store",
+    "remediation_effort": 75,
+    "tags": [
+      "security-debt",
+      "encryption",
+      "storage",
+      "sensitive-data"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "PLAIN_TEXT_STORAGE",
+    "business_impact": "Critical"
+  },
+  {
+    "id": "cors-policy",
+    "name": "Overly Permissive CORS",
+    "description": "Detects overly permissive CORS configuration",
+    "severity": "MAJOR",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "CORS_ORIGIN_ALLOW_ALL\\s*=\\s*True|Access-Control-Allow-Origin.*\\*",
+    "remediation_effort": 25,
+    "tags": [
+      "security-debt",
+      "cors",
+      "web-security",
+      "configuration"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "CORS_POLICY",
+    "business_impact": "Medium"
+  },
+  {
+    "id": "rate-limiting",
+    "name": "Missing Rate Limiting",
+    "description": "Detects API endpoints without rate limiting",
+    "severity": "MAJOR",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "@app\\.route.*login|@app\\.route.*register|@app\\.route.*reset",
+    "remediation_effort": 35,
+    "tags": [
+      "security-debt",
+      "rate-limiting",
+      "api-security",
+      "brute-force"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "RATE_LIMITING",
+    "business_impact": "Medium"
+  },
+  {
+    "id": "secure-cookies",
+    "name": "Insecure Cookie Configuration",
+    "description": "Detects insecure cookie settings",
+    "severity": "MAJOR",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "SESSION_COOKIE_SECURE\\s*=\\s*False|SESSION_COOKIE_HTTPONLY\\s*=\\s*False",
+    "remediation_effort": 20,
+    "tags": [
+      "security-debt",
+      "cookies",
+      "session-security",
+      "web-security"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "SECURE_COOKIES",
+    "business_impact": "Medium"
+  },
+  {
+    "id": "ssl-tls",
+    "name": "Weak SSL/TLS Configuration",
+    "description": "Detects weak SSL/TLS settings",
+    "severity": "CRITICAL",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "SSL_VERSION.*SSLv3|CERT_VERIFY\\s*=\\s*False|SSL_CHECK_HOSTNAME\\s*=\\s*False",
+    "remediation_effort": 50,
+    "tags": [
+      "security-debt",
+      "ssl",
+      "tls",
+      "encryption",
+      "transport-security"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "SSL_TLS",
+    "business_impact": "Critical"
+  },
+  {
+    "id": "secrets-management",
+    "name": "Poor Secrets Management",
+    "description": "Detects poor secrets management practices",
+    "severity": "MAJOR",
+    "type": "SECURITY_TECH_DEBT",
+    "language": "*",
+    "pattern": "#.*(?:API_KEY|JWT_SECRET|AWS_SECRET)|DEFAULT.*(?:API_KEY|SECRET)",
+    "remediation_effort": 40,
+    "tags": [
+      "security-debt",
+      "secrets",
+      "management",
+      "configuration"
+    ],
+    "enabled": true,
+    "custom": false,
+    "threat_category": "SECURITY_TECH_DEBT",
+    "debt_category": "SECRETS_MANAGEMENT",
+    "business_impact": "High"
   }
 ]

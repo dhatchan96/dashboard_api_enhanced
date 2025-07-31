@@ -14,6 +14,10 @@ const ThreatGuardDashboard = () => {
   const [activeTab, setActiveTab] = useState("logicbombs");
   const [selectedThreat, setSelectedThreat] = useState(null);
   const [showThreatModal, setShowThreatModal] = useState(false);
+  const [githubUrl, setGithubUrl] = useState('');
+  const [scanningGithub, setScanningGithub] = useState(false);
+  const [githubToken, setGithubToken] = useState('');
+  const [showTokenInput, setShowTokenInput] = useState(false);
 
   const logicBombThreats = recentThreats.filter(
     (t) => t.type?.includes("BOMB") || t.rule_id?.startsWith("LOGIC_BOMB_") || t.rule_id?.startsWith("MALWARE_")
@@ -240,6 +244,57 @@ const ThreatGuardDashboard = () => {
     }
   };
 
+  const handleGithubScan = async () => {
+    if (!githubUrl.trim()) {
+      showToast('Please enter a GitHub repository URL', 'error');
+      return;
+    }
+
+    const payload = {
+      scan_id: generateId(),
+      scan_type: "github",
+      project_id: `github-scan-${Date.now()}`,
+      project_name: "GitHub Repository Scan",
+      timestamp: new Date().toISOString(),
+      github_url: githubUrl.trim(),
+      github_token: githubToken.trim() || undefined, // Only send if provided
+    };
+
+    try {
+      setScanningGithub(true);
+      const response = await API.post("/api/scan/github", payload);
+      fetchMetrics();
+      fetchHealth();
+
+      const scanData = response.data;
+      const threatCount = scanData.summary?.logic_bomb_patterns_found || scanData.summary?.total_issues || 0;
+      const riskScore = scanData.logic_bomb_metrics?.logic_bomb_risk_score || 0;
+      const filesCount = scanData.github_info?.files_count || 0;
+      const isPrivate = scanData.github_info?.is_private || false;
+
+      showToast(
+        `GitHub scan completed! Found ${threatCount} threats in ${filesCount} files. Risk Score: ${riskScore}/100${isPrivate ? ' (Private Repo)' : ''}`,
+        threatCount > 0 ? "warning" : "success"
+      );
+      
+      // Clear the input after successful scan
+      setGithubUrl('');
+      setGithubToken('');
+      setShowTokenInput(false);
+    } catch (err) {
+      console.error(err);
+      const errorMsg = err.response?.data?.error || 'Failed to scan GitHub repository';
+      showToast(errorMsg, 'error');
+      
+      // Handle authentication errors
+      if (err.response?.status === 401) {
+        setShowTokenInput(true);
+      }
+    } finally {
+      setScanningGithub(false);
+    }
+  };
+
   const readFileContent = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -373,6 +428,73 @@ const ThreatGuardDashboard = () => {
                 ? "🔍 Scanning for Threats..."
                 : "🎯 Scan for Threats"}
             </button>
+            
+            {/* GitHub Repository Upload */}
+            <div className="d-flex align-items-center gap-2">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="https://github.com/owner/repository"
+                value={githubUrl}
+                onChange={(e) => setGithubUrl(e.target.value)}
+                style={{ minWidth: '300px' }}
+                disabled={scanningGithub}
+              />
+              <button
+                className="btn btn-primary"
+                onClick={handleGithubScan}
+                disabled={scanningGithub || !githubUrl.trim()}
+              >
+                {scanningGithub
+                  ? "🔍 Scanning GitHub..."
+                  : "📦 Scan GitHub Repo"}
+              </button>
+            </div>
+            
+            {/* GitHub Token Input (shown when needed) */}
+            {showTokenInput && (
+              <div className="mt-3 p-3 bg-warning bg-opacity-10 border border-warning rounded">
+                <div className="d-flex align-items-center gap-2">
+                  <i className="bi bi-shield-lock text-warning"></i>
+                  <span className="text-warning fw-bold">Private Repository Detected</span>
+                </div>
+                <small className="text-muted d-block mb-2">
+                  This appears to be a private repository. Please provide your GitHub token to access it.
+                </small>
+                <div className="d-flex align-items-center gap-2">
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="GitHub Personal Access Token"
+                    value={githubToken}
+                    onChange={(e) => setGithubToken(e.target.value)}
+                    style={{ minWidth: '300px' }}
+                    disabled={scanningGithub}
+                  />
+                  <button
+                    className="btn btn-warning"
+                    onClick={handleGithubScan}
+                    disabled={scanningGithub || !githubToken.trim()}
+                  >
+                    🔐 Scan Private Repo
+                  </button>
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={() => {
+                      setShowTokenInput(false);
+                      setGithubToken('');
+                    }}
+                    disabled={scanningGithub}
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <small className="text-muted d-block mt-2">
+                  <i className="bi bi-info-circle"></i>
+                  Create a token at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">GitHub Settings</a> with 'repo' scope
+                </small>
+              </div>
+            )}
           </div>
         </div>
       </div>
